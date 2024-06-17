@@ -1,28 +1,42 @@
-import React from 'react'
+import React, { lazy, useContext, useState } from 'react'
 import '../styles/LandingPage.css'
 import { Page, Section } from '../components/tags'
 import TopBar from '../components/TopBar'
 import BlogDisplay from '../components/BlogDisplay'
+import { WebContext } from '../WebContext'
+import LoadingPage from './LoadingPage'
+
+const AddBlogPage = lazy(() => import('./AddBlogPage'));
 
 function LandingPage() {
+  const {showBlogPopUp, setShowBlogPopUp} = useContext(WebContext);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
-    <Page className='landing_page'>
-        {/* T O P   S E C T I O N */}
-        <Section className='top_section'>
-            <TopBar />
+    // isLoaded ? (
+      <Page className='landing_page'>
+          {/* T O P   S E C T I O N */}
+          <Section className='top_section'>
+              <TopBar />
 
-            <section className='landing_page_welcome_section'>
-                {/* <h1>A Thriving Society</h1> */}
-                {/* <p>Embrace wisdom in your thoughts, clarity in your words, <br />and mindfulness in your actions.</p> */}
-                <h1>Simple Blog Website</h1>
-            </section>
-        </Section>
+              <section className='landing_page_welcome_section'>
+                  <h1>Product Tracking system</h1>
+              </section>
+          </Section>
 
-        <Section className='landing_page_blog_section'>
-            <BlogDisplay />
-        </Section>
+          <Section className='landing_page_blog_section'>
+              <BlogDisplay />
+          </Section>
 
-    </Page>
+          {showBlogPopUp && (
+            <Section className='add_blog_sec'>
+              <AddBlogPage />
+            </Section>
+          )}
+      </Page>
+    // ) : (
+    //   <LoadingPage />
+    // )
   )
 }
 

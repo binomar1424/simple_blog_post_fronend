@@ -1,49 +1,54 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import '../styles/BlogDisplay.css'
+import './../styles/LoadingPage.css'
 import { Box, Wrapper } from './tags'
 import axios from 'axios';
 import { format } from 'date-fns';
+import { WebContext } from '../WebContext';
 
 function BlogDisplay() {
-    const [blogsData, setBlogsData] = useState([]);
+    const [productsData, setProductsData] = useState([]);
+    const {reloadData} = useContext(WebContext)
 
     useEffect(() => {
         async function getBlogs() {
-            const resp = await axios.get('http://localhost:2300/blogs')
+            const resp = await axios.get('http://localhost:2300/products')
             if (resp.status == 200) {
-                setBlogsData(resp.data);
+                setProductsData(resp.data);
             }
         }
         getBlogs();
-    },[]);
+    },[reloadData]);
 
   return (
     <Wrapper>
         <h3>Recently uploaded</h3>
+        <br />
+        <p className='total_products_p'>Total products: {String(productsData.length).padStart(2, 0)}</p>
         <br /><br />
         <Wrapper className='blog_wrapper'>
-            {blogsData.length ? (
-                blogsData.map((value, index) => (
-                    <Box className='blog_box' key={index}>
-                        <div className='blog_box_img_div'>
-                            <img src={value.blog_img} />
+            {productsData.length ? (
+                productsData.map((value, index) => (
+                    <Box className='product_box' key={index}>
+                        <div className='product_img_div'>
+                            <img src={`http://localhost:2300/product_images/${value.product_image}`}/>
                         </div>
 
-                        <div className='blog_box_details_div'>
-                            <p>{value.blog_title}</p>
+                        <div className='product_details_div'>
+                            <p className='product_name'>{value.product_name}</p>
+                            <div className='product_quantity_div'>
+                                <span>Quantity</span>
+                                <span>{value.product_quantity}</span>
+                            </div>
 
-                            <div className='blog_box_publish_details'>
-                                <div className='publisher'>
-                                    {/* <img src={pu} /> */}
-                                    <span>{value.publisher_name}</span>
-                                </div>
-
-                                <span>{value.published_date ? format(value.published_date, 'dd-MMM') : '--'}</span>
+                            <div className='product_price_div'>
+                                <span>Price</span>
+                                <span>{value.product_price} Birr</span>
                             </div>
                         </div>
                         </Box>
                 ))
-            ): <p>Blog data is not available</p>}
+            ): <p>No products are available</p>}
         </Wrapper>
     </Wrapper>
   )

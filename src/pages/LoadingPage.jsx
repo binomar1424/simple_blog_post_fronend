@@ -1,8 +1,11 @@
 import React from 'react'
+import '../styles/LoadingPage.css'
 
 function LoadingPage() {
   return (
-    <div>LoadingPage</div>
+    <div className='loading_page'>
+      <div className='loader'></div>
+    </div>
   )
 }
 
